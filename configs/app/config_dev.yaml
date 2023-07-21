@@ -1,0 +1,46 @@
+Server:
+  RunMode: debug
+  HttpPort: 8080
+  ReadTimeout: 60
+  WriteTimeout: 60
+App:
+  DefaultPageSize: 10
+  DefaultContextTimeout: 600
+  MaxPageSize: 100
+  LogSavePath: storage/logs
+  LogFileName: app
+  LogFileExt: .log
+  UploadSavePath: storage/uploads
+  UploadServerUrl: http://127.0.0.1:8080/static
+  UploadImageMaxSize: 5  # MB
+  UploadImageAllowExts:
+    - .jpg
+    - .jpeg
+    - .png
+Database:
+  DBType: mysql
+  Username: root  # 填写你的数据库账号
+  Password: 123456  # 填写你的数据库密码
+  Host: 127.0.0.1:33060
+  DBName: blog_service
+  TablePrefix: blog_
+  Charset: utf8
+  ParseTime: True
+  MaxIdleConns: 10
+  MaxOpenConns: 30
+
+Redis:
+  Password: 123456
+  Host: 127.0.0.1:63791
+  DB: 0
+
+MongoDB:
+  Username: root
+  Password: 123456
+  Host: 127.0.0.1:37017
+  DBName: blog_service
+
+JWT:
+  Secret: eddycjy
+  Issuer: blog-service
+  Expire: 7200

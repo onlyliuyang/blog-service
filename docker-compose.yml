@@ -1,0 +1,75 @@
+version: "3.1"
+services:
+  app-mysql:
+    image: mysql:5.7.42
+    container_name: app-mysql
+    restart: "always"
+    ports:
+      - "33060:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: 123456
+      MYSQL_DATABASE: blog_service
+#      MYSQL_PASSWORD: "123456"
+    command: --init-file /docker-entrypoint-initdb.d/init.sql
+    volumes:
+      - ./configs/mysql/mysqld.conf:/etc/mysql/mysql.conf.d/mysqld.conf
+      - ./var/lib/mysql:/var/lib/mysql
+      - ./configs/mysql/init/:/docker-entrypoint-initdb.d/
+    networks:
+      - app-networks
+
+  app-redis:
+    image: redis:5.0
+    container_name: app-redis
+    restart: "always"
+    ports:
+      - "63791:6379"
+    command: ["redis-server", "/etc/redis/redis.conf"]
+    volumes:
+      - ./configs/redis/redis.conf:/etc/redis/redis.conf
+    networks:
+      - app-networks
+
+  app-mongodb:
+    image: mongo:4.4
+    container_name: app-mongodb
+    restart: always
+    ports:
+      - "37017:27017"
+    environment:
+      - TZ=Asia/Shanghai
+      - MONGO_INITDB_DATABASE=blog_service
+      - MONGO_INITDB_ROOT_USERNAME=root
+      - MONGO_INITDB_ROOT_PASSWORD=123456
+    #command: mongod --config /etc/mongo/mongod.conf
+    #command: ["mongod", "--config", "/etc/mongo/mongod.conf"]
+    volumes:
+      - ./configs/mongodb/mongod.conf:/etc/mongo/mongod.conf
+      - ./configs/mongodb/init/mongo-init.sh:/docker-entrypoint-initdb.d/mongo-init.sh:ro
+      - ./var/lib/mongodb/data:/data/db
+      - ./var/lib/mongodb/logs:/data/logs
+      - ./var/lib/mongodb/config:/data/configdb
+    networks:
+      - app-networks
+
+  app-blog:
+ #   image: "yangforliu/blog-service:v5"
+    build: .
+    container_name: app-blog
+    restart: "on-failure"
+    links:
+      - app-mysql
+      - app-redis
+      - app-mongodb
+    depends_on:
+      - app-mysql
+      - app-redis
+      - app-mongodb
+    ports:
+      - 8888:8080
+    networks:
+      - app-networks
+
+networks:
+  app-networks:
+    driver: bridge
