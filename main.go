@@ -69,6 +69,12 @@ func init() {
 		log.Fatalf("init.setupTracer err: %v", err)
 		return
 	}
+
+	err = initialization.SetPulsarClient()
+	if err != nil {
+		log.Fatalf("init.SetPulsarClient err: %v", err)
+		return
+	}
 }
 
 func setupFlag() error {
@@ -79,6 +85,12 @@ func setupFlag() error {
 	return nil
 }
 
+func releaseResource() {
+	defer func() {
+		global.PulsarClient.Close()
+		_ = global.RedisDB.Close()
+	}()
+}
 
 // @title 博客系统
 // @version 1.0
@@ -88,7 +100,7 @@ func main() {
 	gin.SetMode(global.ServerSetting.RunMode)
 	router := routers.NewRouter()
 	s := &http.Server{
-		Addr:           ":8080",
+		Addr:           ":" + global.ServerSetting.HttpPort,
 		Handler:        router,
 		ReadTimeout:    10 * time.Second,
 		WriteTimeout:   10 * time.Second,
@@ -116,5 +128,6 @@ func main() {
 	if err := s.Shutdown(ctx); err != nil {
 		log.Fatalf("Server forced to shutdown: %v", err)
 	}
+	releaseResource()
 	log.Println("Server exiting...")
 }

@@ -6,7 +6,6 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/copier"
 	"go.mongodb.org/mongo-driver/bson/primitive"
-	"time"
 )
 
 type Comment struct {
@@ -20,8 +19,8 @@ type Comment struct {
 func (d *Dao) CreateComment(ctx *gin.Context, params *Comment) (interface{}, error) {
 	commentId := util.Uuid(ctx)
 	c := model.ArticleComment{Id: commentId}
-	c.CreatedAt = time.Now().Format(time.DateTime)
-	c.UpdatedAt = time.Now().Format(time.DateTime)
+	//c.CreatedAt = time.Now().Format(time.DateTime)
+	//c.UpdatedAt = time.Now().Format(time.DateTime)
 	_ = copier.Copy(&c, params)
 	id, err := c.Create(ctx, d.mongoDB)
 	return id, err

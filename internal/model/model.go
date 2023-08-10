@@ -12,8 +12,8 @@ import (
 )
 
 type Model struct {
-	CreatedAt string `bson:"created_at" json:"created_at" gorm:"column:created_at"`
-	UpdatedAt string `bson:"updated_at" json:"updated_at" gorm:"column:updated_at"`
+	CreatedAt time.Time `bson:"created_at" json:"created_at" gorm:"column:created_at"`
+	UpdatedAt time.Time `bson:"updated_at" json:"updated_at" gorm:"column:updated_at"`
 }
 
 func NewDBEngine(databaseSetting *setting.DatabaseSettingS) (*gorm.DB, error) {

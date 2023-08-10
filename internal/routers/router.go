@@ -8,6 +8,7 @@ import (
 	"github.com/blog-service/internal/middleware"
 	"github.com/blog-service/pkg/limiter"
 	"github.com/gin-gonic/gin"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"net/http"
@@ -30,6 +31,11 @@ func NewRouter() *gin.Engine {
 	r.Use(middleware.RateLimiter(methodLimiters))
 	r.Use(middleware.ContextTimeout(global.AppSetting.DefaultContextTime * time.Second))
 	r.Use(middleware.Tracing())
+
+	//添加prometheus监控
+	ginPrometheus := middleware.NewGinPrometheus(r)
+	r.Use(ginPrometheus.Middleware())
+	r.GET("/metrics", gin.WrapH(promhttp.Handler()))
 
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 

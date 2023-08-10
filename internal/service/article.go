@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"github.com/blog-service/global"
 	"github.com/blog-service/internal/model"
+	"github.com/blog-service/internal/queue"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/copier"
 )
@@ -56,6 +57,14 @@ func (svc *ArticleService) Create(ctx *gin.Context, params *ArticleCreateRequest
 		global.Logger.Errorof(ctx, "文章创建失败: %v", err)
 		return 0, err
 	}
+
+	var articleProducer queue.ArticleProduce
+	payload, _ := json.Marshal(params)
+	err = articleProducer.SendMessage(ctx, payload)
+	if err != nil {
+		global.Logger.Errorof(ctx, "文章写入消息队列失败: %v", err)
+	}
+
 	return id, nil
 }
 
