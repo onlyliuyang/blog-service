@@ -24,4 +24,6 @@ var (
 
 	ErrorCreateComment = NewError(20010021, "创建评论失败")
 	ErrorDeleteComment = NewError(20010022, "删除评论失败")
+
+	ErrorAccountLogin = NewError(20010023, "用户登录失败")
 )

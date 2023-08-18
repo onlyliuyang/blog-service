@@ -53,6 +53,7 @@ create table bs_author
     id          int  comment '用户uid' primary key,
     name      varchar(20)                                 not null comment '作者名称',
     mobile       varchar(13)                                 not null comment '作者手机号',
+    password       varchar(13)                                 not null comment '作者密码',
     country_code smallint unsigned default '86'              not null comment '手机号国家区号',
     status        tinyint unsigned  default '1'               not null comment '用户状态: 1启用 2封存3注销',
     created_at   datetime          default CURRENT_TIMESTAMP not null comment '创建时间',

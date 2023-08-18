@@ -64,3 +64,9 @@ func (d *Dao) GetAuthor(ctx *gin.Context, id int64) (info *model.Author, err err
 	info, err = author.AuthorById(ctx, d.engine, id)
 	return
 }
+
+func (d *Dao) GetAuthorByName(ctx *gin.Context, name, password string) (info *model.Author, err error) {
+	var author model.Author
+	info, err = author.AuthorByName(ctx, d.engine, name, password)
+	return
+}

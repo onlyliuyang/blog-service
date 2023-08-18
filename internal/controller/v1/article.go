@@ -49,7 +49,7 @@ func (a *Article) Get(c *gin.Context) {
 // @Failure 500 {object} errcode.Error "内部错误"
 // @Router /api/v1/tags [get]
 func (a *Article) List(c *gin.Context) {
-	var params *service.ArticleListRequest
+	var params service.ArticleListRequest
 	response := app.NewResponse(c)
 	_, errs := app.BindAndValid(c, &params)
 	if errs != nil {

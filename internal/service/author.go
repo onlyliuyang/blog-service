@@ -32,6 +32,7 @@ type AuthorUpdateRequest struct {
 type AuthorResponse struct {
 	Id          int64     `json:"id"`
 	Name        string    `json:"name"`
+	Password    string    `json:"password"`
 	Mobile      string    `json:"mobile"`
 	HeadUrl     string    `json:"head_url"`
 	CountryCode int       `json:"country_code"`
@@ -40,8 +41,25 @@ type AuthorResponse struct {
 	UpdatedAt   time.Time `json:"updated_at"`
 }
 
+type AuthorLoginRequest struct {
+	Name     string `form:"name" json:"name"`
+	Password string `form:"password" json:"password"`
+}
+
 type AuthorService struct {
-	*Service
+	Service
+}
+
+func (svc *AuthorService) GetAuthor(ctx *gin.Context, params *AuthorLoginRequest) (authorInfo AuthorResponse, err error) {
+	info, err := svc.dao.GetAuthorByName(ctx, params.Name, params.Password)
+	if err != nil {
+		return authorInfo, err
+	}
+	err = copier.Copy(&authorInfo, &info)
+	if err != nil {
+		return authorInfo, err
+	}
+	return
 }
 
 func (svc *AuthorService) CreateAuthor(ctx *gin.Context, params *AuthorCreateRequest) error {

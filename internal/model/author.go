@@ -9,6 +9,7 @@ import (
 type Author struct {
 	Id          int64  `gorm:"column:id"`
 	Name        string `gorm:"column:name"`
+	Password    string `gorm:"column:password"`
 	Mobile      string `gorm:"column:mobile"`
 	HeadUrl     string `gorm:"column:head_url"`
 	CountryCode int    `gorm:"column:country_code"`
@@ -81,5 +82,10 @@ func (a *Author) AuthorDelete(ctx *gin.Context, db *gorm.DB, id int64) error {
 */
 func (a *Author) AuthorById(ctx *gin.Context, db *gorm.DB, id int64) (info *Author, err error) {
 	err = db.WithContext(ctx).Where("aid = ?", id).Find(&info).Error
+	return
+}
+
+func (a *Author) AuthorByName(ctx *gin.Context, db *gorm.DB, name, password string) (info *Author, err error) {
+	err = db.WithContext(ctx).Where("name", name).Where("password", password).Find(&info).Error
 	return
 }

@@ -48,7 +48,7 @@ func init() {
 
 	err = initialization.SetupMongoDB()
 	if err != nil {
-		log.Fatalf("init.setupDBEngine err: %v", err)
+		log.Fatalf("init.SetupMongoDB err: %v", err)
 		return
 	}
 
@@ -70,11 +70,11 @@ func init() {
 		return
 	}
 
-	err = initialization.SetPulsarClient()
-	if err != nil {
-		log.Fatalf("init.SetPulsarClient err: %v", err)
-		return
-	}
+	//err = initialization.SetPulsarClient()
+	//if err != nil {
+	//	log.Fatalf("init.SetPulsarClient err: %v", err)
+	//	return
+	//}
 }
 
 func setupFlag() error {

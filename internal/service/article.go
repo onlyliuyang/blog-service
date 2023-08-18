@@ -27,12 +27,12 @@ type ArticleUpdateRequest struct {
 }
 
 type ArticleListRequest struct {
-	Id       int64  `form:"id" json:"id" binding:""`
-	AuthorId int    `form:"author_id" binding:""`
-	Sort     int    `form:"sort" json:"sort" binding:""`
-	Url      string `form:"url" json:"url" binding:""`
-	Title    string `form:"title" json:"title" binding:""`
-	Content  string `form:"content" json:"content" binding:""`
+	Id       int64  `form:"id" json:"id"`
+	AuthorId int    `form:"author_id" json:"author_id"`
+	Sort     int    `form:"sort" json:"sort"`
+	Url      string `form:"url" json:"url"`
+	Title    string `form:"title" json:"title"`
+	Content  string `form:"content" json:"content"`
 }
 
 type ArticleDetail struct {
@@ -80,7 +80,7 @@ func (svc *ArticleService) Update(ctx *gin.Context, params *ArticleUpdateRequest
 	return nil
 }
 
-func (svc *ArticleService) List(ctx *gin.Context, params *ArticleListRequest) (list []*ArticleDetail, err error) {
+func (svc *ArticleService) List(ctx *gin.Context, params ArticleListRequest) (list []*ArticleDetail, err error) {
 	data, err := svc.dao.ListArticle(ctx)
 	if err != nil {
 		global.Logger.Errorof(ctx, "获取文章列表失败: %v", err)
@@ -96,7 +96,7 @@ func (svc *ArticleService) List(ctx *gin.Context, params *ArticleListRequest) (l
 	return
 }
 
-func (svc *ArticleService) Count(ctx *gin.Context, params *ArticleListRequest) (count int64, err error) {
+func (svc *ArticleService) Count(ctx *gin.Context, params ArticleListRequest) (count int64, err error) {
 	data, err := svc.dao.CountArticle(ctx)
 	if err != nil {
 		global.Logger.Errorof(ctx, "获取文章总数失败: %v", err)

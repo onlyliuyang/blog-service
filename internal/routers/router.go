@@ -33,8 +33,7 @@ func NewRouter() *gin.Engine {
 	r.Use(middleware.Tracing())
 
 	//添加prometheus监控
-	ginPrometheus := middleware.NewGinPrometheus(r)
-	r.Use(ginPrometheus.Middleware())
+	r.Use(middleware.PromMiddleware(nil))
 	r.GET("/metrics", gin.WrapH(promhttp.Handler()))
 
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
@@ -46,7 +45,8 @@ func NewRouter() *gin.Engine {
 	//r.POST("/auth", v1.GetAuth)
 
 	apiv1 := r.Group("/api/v1")
-	//apiv1.Use(middleware.JWT())
+	apiv1.POST("/login", controller.AuthorController.Login)
+	apiv1.Use(middleware.JWT())
 	{
 		apiv1.POST("/categories", controller.CategoryController.Create)
 		apiv1.DELETE("/categories/:id", controller.CategoryController.Delete)
