@@ -30,10 +30,23 @@ func GenerateToken(appKey, appSecret string) (string, error) {
 	}
 	tokenClaims := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	token, err := tokenClaims.SignedString(GetJWTSecret())
+	if err != nil {
+		return "", err
+	}
+	global.RedisDB.Set(token, appKey, global.JWTSetting.Expire)
 	return token, err
 }
 
 func ParseToken(token string) (*Claims, error) {
+	exists, err := global.RedisDB.Exists(token).Result()
+	if err != nil {
+		return nil, jwt.NewValidationError("认证不存在", jwt.ValidationErrorExpired)
+	}
+
+	if exists == 0 {
+		return nil, jwt.NewValidationError("认证不存在", jwt.ValidationErrorExpired)
+	}
+
 	tokenClaims, err := jwt.ParseWithClaims(token, &Claims{}, func(token *jwt.Token) (interface{}, error) {
 		return GetJWTSecret(), nil
 	})

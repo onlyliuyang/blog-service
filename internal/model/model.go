@@ -17,7 +17,7 @@ type Model struct {
 }
 
 func NewDBEngine(databaseSetting *setting.DatabaseSettingS) (*gorm.DB, error) {
-	dsn := fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=%s&parseTime=%t&loc=Local",
+	dsn := fmt.Sprintf("%s:%s@tcp(%s)/%s?charset=%s&parseTime=%t&loc=Local&timeout=1s",
 		databaseSetting.UserName,
 		databaseSetting.Password,
 		databaseSetting.Host,
@@ -40,7 +40,9 @@ func NewDBEngine(databaseSetting *setting.DatabaseSettingS) (*gorm.DB, error) {
 	//span := opentracing.SpanFromContext(c.Request.Context())
 	defer span.Finish()
 
-	ctx := opentracing.ContextWithSpan(context.Background(), span)
+	timeoutCtx, _ := context.WithTimeout(context.Background(), 8*time.Second)
+
+	ctx := opentracing.ContextWithSpan(timeoutCtx, span)
 	db = db.WithContext(ctx)
 
 	sqlDB, err := db.DB()

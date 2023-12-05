@@ -10,7 +10,6 @@ type ArticleProduce struct {
 }
 
 func (p *ArticleProduce) SendMessage(ctx *gin.Context, payload []byte) error {
-	return nil
 	messageId, err := global.ArticlePulsarProducer.Send(ctx, &pulsar.ProducerMessage{
 		Payload: payload,
 	})

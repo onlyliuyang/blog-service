@@ -8,7 +8,6 @@ import (
 	"github.com/blog-service/internal/middleware"
 	"github.com/blog-service/pkg/limiter"
 	"github.com/gin-gonic/gin"
-	"github.com/prometheus/client_golang/prometheus/promhttp"
 	swaggerFiles "github.com/swaggo/files"
 	ginSwagger "github.com/swaggo/gin-swagger"
 	"net/http"
@@ -33,8 +32,8 @@ func NewRouter() *gin.Engine {
 	r.Use(middleware.Tracing())
 
 	//添加prometheus监控
-	r.Use(middleware.PromMiddleware(nil))
-	r.GET("/metrics", gin.WrapH(promhttp.Handler()))
+	//r.Use(middleware.PromMiddleware(nil))
+	//r.GET("/metrics", gin.WrapH(promhttp.Handler()))
 
 	r.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
@@ -46,6 +45,8 @@ func NewRouter() *gin.Engine {
 
 	apiv1 := r.Group("/api/v1")
 	apiv1.POST("/login", controller.AuthorController.Login)
+	apiv1.POST("/register", controller.UserAccountController.Register)
+
 	apiv1.Use(middleware.JWT())
 	{
 		apiv1.POST("/categories", controller.CategoryController.Create)
