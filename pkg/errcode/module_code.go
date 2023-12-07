@@ -27,4 +27,8 @@ var (
 
 	ErrorAccountLogin    = NewError(20010023, "用户登录失败")
 	ErrorAccountRegister = NewError(20010024, "用户注册失败")
+	ErrorGetUserInfo     = NewError(20010025, "获取用户信息失败")
+	ErrorUserNotFound    = NewError(20010026, "用户不存在")
+	ErrorUserCancel      = NewError(20010027, "用户已注销")
+	ErrorUserList        = NewError(20010028, "用户列表失败")
 )

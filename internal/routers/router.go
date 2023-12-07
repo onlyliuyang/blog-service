@@ -46,24 +46,27 @@ func NewRouter() *gin.Engine {
 	apiv1 := r.Group("/api/v1")
 	apiv1.POST("/login", controller.AuthorController.Login)
 	apiv1.POST("/register", controller.UserAccountController.Register)
+	apiv1.GET("/get_user_info", controller.UserAccountController.GetUserInfo)
+	apiv1.POST("/import_user_list", controller.UserAccountController.ImportUserList)
+	apiv1.GET("/get_user_list", controller.UserAccountController.GetUserList)
 
-	apiv1.Use(middleware.JWT())
-	{
-		apiv1.POST("/categories", controller.CategoryController.Create)
-		apiv1.DELETE("/categories/:id", controller.CategoryController.Delete)
-		apiv1.PUT("/categories/:id", controller.CategoryController.Update)
-		apiv1.PATCH("/categories/:id/state", controller.CategoryController.Update)
-		apiv1.GET("/categories", controller.CategoryController.List)
-
-		apiv1.POST("/articles", controller.ArticleController.Create)
-		apiv1.DELETE("/articles/:id", controller.ArticleController.Delete)
-		apiv1.PUT("/articles/:id", controller.ArticleController.Update)
-		apiv1.PATCH("/articles/:id/state", controller.ArticleController.Update)
-		apiv1.GET("/articles/:id", controller.ArticleController.Get)
-		apiv1.GET("/articles", controller.ArticleController.List)
-
-		apiv1.POST("/comments", controller.CommentController.Create)
-		apiv1.DELETE("/comments/:id", controller.CommentController.Delete)
-	}
+	//apiv1.Use(middleware.JWT())
+	//{
+	//	apiv1.POST("/categories", controller.CategoryController.Create)
+	//	apiv1.DELETE("/categories/:id", controller.CategoryController.Delete)
+	//	apiv1.PUT("/categories/:id", controller.CategoryController.Update)
+	//	apiv1.PATCH("/categories/:id/state", controller.CategoryController.Update)
+	//	apiv1.GET("/categories", controller.CategoryController.List)
+	//
+	//	apiv1.POST("/articles", controller.ArticleController.Create)
+	//	apiv1.DELETE("/articles/:id", controller.ArticleController.Delete)
+	//	apiv1.PUT("/articles/:id", controller.ArticleController.Update)
+	//	apiv1.PATCH("/articles/:id/state", controller.ArticleController.Update)
+	//	apiv1.GET("/articles/:id", controller.ArticleController.Get)
+	//	apiv1.GET("/articles", controller.ArticleController.List)
+	//
+	//	apiv1.POST("/comments", controller.CommentController.Create)
+	//	apiv1.DELETE("/comments/:id", controller.CommentController.Delete)
+	//}
 	return r
 }

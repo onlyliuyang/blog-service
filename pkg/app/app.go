@@ -62,5 +62,5 @@ func (r *Response) ToErrorResponse(err *errcode.Error) {
 		response["details"] = details
 	}
 
-	r.Ctx.JSON(err.StatusCode(), response)
+	r.Ctx.JSON(http.StatusOK, response)
 }
