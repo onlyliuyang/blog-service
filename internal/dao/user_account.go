@@ -2,7 +2,6 @@ package dao
 
 import (
 	"fmt"
-	_const "github.com/blog-service/const"
 	"github.com/blog-service/global"
 	"github.com/blog-service/internal/model"
 	"github.com/blog-service/pkg/convert"
@@ -43,29 +42,29 @@ func (d *Dao) RegisterUser(ctx *gin.Context, userAccount *model.UserAccount) err
 
 func (d *Dao) GetUserInfo(ctx *gin.Context, userId int) (userInfo *model.UserAccount, err error) {
 	cacheKey := fmt.Sprintf(USER_ACCOUNT_KEY, userId)
-	userInfoFromCache, err := global.RedisDB.HGetAll(cacheKey).Result()
-	if err != nil {
-		return nil, err
-	}
-
-	//从缓存中获取数据
-	if len(userInfoFromCache) > 0 {
-		mapData := make(map[string]interface{})
-		for key, val := range userInfoFromCache {
-			if key == "created_at" || key == "updated_at" {
-				parseTime, _ := time.Parse(time.RFC3339, val)
-				mapData[key] = parseTime.Format(_const.DATE_LAYOUT)
-			} else {
-				mapData[key] = val
-			}
-		}
-		userInfo = &model.UserAccount{}
-		err = convert.MapToStruct(mapData, userInfo)
-		if err != nil {
-			return nil, err
-		}
-		return userInfo, nil
-	}
+	//userInfoFromCache, err := global.RedisDB.HGetAll(cacheKey).Result()
+	//if err != nil {
+	//	return nil, err
+	//}
+	//
+	////从缓存中获取数据
+	//if len(userInfoFromCache) > 0 {
+	//	mapData := make(map[string]interface{})
+	//	for key, val := range userInfoFromCache {
+	//		if key == "created_at" || key == "updated_at" {
+	//			parseTime, _ := time.Parse(time.RFC3339, val)
+	//			mapData[key] = parseTime.Format(_const.DATE_LAYOUT)
+	//		} else {
+	//			mapData[key] = val
+	//		}
+	//	}
+	//	userInfo = &model.UserAccount{}
+	//	err = convert.MapToStruct(mapData, userInfo)
+	//	if err != nil {
+	//		return nil, err
+	//	}
+	//	return userInfo, nil
+	//}
 
 	//如果缓存没有，则从DB中获取数据
 	var userAccount model.UserAccount

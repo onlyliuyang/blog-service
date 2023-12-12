@@ -43,7 +43,6 @@ func (u *UsersAccount) GetUserInfo(ctx *gin.Context) {
 	response := app.NewResponse(ctx)
 	userId, _ := ctx.GetQuery("user_id")
 	userId = strings.Trim(userId, " ")
-
 	if userId == "" || len(userId) <= 0 {
 		response.ToErrorResponse(errcode.InvalidParams.WithDetails())
 		return

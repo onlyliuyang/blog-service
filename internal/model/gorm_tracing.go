@@ -13,7 +13,16 @@ import (
 const gormSpanKey = "__gorm_span"
 
 func before(db *gorm.DB) {
-	span, _ := opentracing.StartSpanFromContext(db.Statement.Context, "gorm")
+	//operationName := db.Statement.Context.Value("operationName").(string) + "_gorm"
+	//span, _ := opentracing.StartSpanFromContext(db.Statement.Context, operationName)
+
+	_, ok := db.Statement.Context.Value("tracer").(opentracing.Tracer)
+	if !ok {
+		return
+	}
+
+	span, _ := opentracing.StartSpanFromContext(db.Statement.Context, "GORM Create")
+	db.InstanceSet("span", span)
 
 	//利用DB实例传递span
 	db.InstanceSet(gormSpanKey, span)

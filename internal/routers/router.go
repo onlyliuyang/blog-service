@@ -24,12 +24,12 @@ var methodLimiters = limiter.NewMethodLimiter().AddBuckets(limiter.LimiterBucket
 func NewRouter() *gin.Engine {
 	r := gin.New()
 	r.Use(gin.Logger(), gin.Recovery())
+	r.Use(middleware.Tracing())
 	r.Use(middleware.Translations())
 	r.Use(middleware.AccessLog())
 	r.Use(middleware.Recovery())
 	r.Use(middleware.RateLimiter(methodLimiters))
 	r.Use(middleware.ContextTimeout(global.AppSetting.DefaultContextTime * time.Second))
-	r.Use(middleware.Tracing())
 
 	//添加prometheus监控
 	//r.Use(middleware.PromMiddleware(nil))

@@ -3,10 +3,13 @@ package service
 import (
 	"encoding/json"
 	"errors"
+	"fmt"
 	_const "github.com/blog-service/const"
 	"github.com/blog-service/internal/model"
+	"github.com/blog-service/pkg/util"
 	"github.com/gin-gonic/gin"
 	"golang.org/x/crypto/bcrypt"
+	"time"
 )
 
 type UserAccountRegisterRequest struct {
@@ -97,5 +100,18 @@ func (svc *UserAccountService) GetUserList(ctx *gin.Context, listRequest *UserAc
 	_ = json.Unmarshal(body, &userListResponse.List)
 	userListResponse.NextCursor = nextCursor
 
+	params := make(map[string]interface{})
+	params["user_id"] = 1
+	res, _ := util.Get(ctx, "http://127.0.0.1:8088/api/v1/get_user_info", params, nil)
+	fmt.Println(string(res))
+
+	defer func() {
+		//4、接口调用完，在tag中设置request和reply
+		//span.SetTag("request", params)
+		//span.SetTag("reply", string(res))
+		//span.LogFields(log.String("event", "你是谁"), log.String("value", "我是你爸爸"))
+		//span.Finish()
+	}()
+	time.Sleep(20 * time.Millisecond)
 	return
 }

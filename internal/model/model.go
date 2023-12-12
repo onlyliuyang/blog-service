@@ -1,11 +1,9 @@
 package model
 
 import (
-	"context"
 	"fmt"
 	"github.com/blog-service/global"
 	"github.com/blog-service/pkg/setting"
-	"github.com/opentracing/opentracing-go"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"time"
@@ -35,15 +33,16 @@ func NewDBEngine(databaseSetting *setting.DatabaseSettingS) (*gorm.DB, error) {
 
 	//db.Callback().Create()
 	db.Use(&OpentracingPlugin{})
+	//db.Use(gormOpentracing.New())
 
-	span := opentracing.StartSpan("gormTracing unit test")
+	//span := opentracing.StartSpan("gormTracing unit test")
 	//span := opentracing.SpanFromContext(c.Request.Context())
-	defer span.Finish()
+	//defer span.Finish()
 
-	timeoutCtx, _ := context.WithTimeout(context.Background(), 8*time.Second)
+	//timeoutCtx, _ := context.WithTimeout(context.Background(), 8*time.Second)
 
-	ctx := opentracing.ContextWithSpan(timeoutCtx, span)
-	db = db.WithContext(ctx)
+	//ctx := opentracing.ContextWithSpan(timeoutCtx, span)
+	//db = db.WithContext(ctx)
 
 	sqlDB, err := db.DB()
 
@@ -56,8 +55,4 @@ func NewDBEngine(databaseSetting *setting.DatabaseSettingS) (*gorm.DB, error) {
 	// SetConnMaxLifetime sets the maximum amount of time a connection may be reused.
 	sqlDB.SetConnMaxLifetime(time.Hour)
 	return db, nil
-}
-
-func Uuid() {
-
 }
